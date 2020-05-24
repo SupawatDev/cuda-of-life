@@ -13,13 +13,23 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 project(CudaOfLife VERSION 0.0.1 LANGUAGES CUDA CXX)
-add_executable(${PROJECT_NAME} src/main.cu)
 
+# Link files
+file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.cu")
+file(GLOB_RECURSE PROJECT_HEADERS "src/*.h")
+set (PROJECT_INCLUDE_DIRS "")
+foreach (_headerFile ${PROJECT_HEADERS})
+    get_filename_component(_dir ${_headerFile} PATH)
+    list (APPEND PROJECT_INCLUDE_DIRS ${_dir})
+endforeach()
+list(REMOVE_DUPLICATES Foo_INCLUDE_DIRS)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${Foo_INCLUDE_DIRS})
+
+# Link dependencies
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} OpenGL)
+find_package(GLU REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${GLU_LIBRARY})
 find_package(GLUT REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${GLUT_LIBRARY})
-
-add_library(utils src/u.cpp src/u.hpp)
-target_link_libraries(${PROJECT_NAME} utils)
-
