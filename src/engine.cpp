@@ -3,11 +3,11 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <iostream>
-float Engine::w = 0.01355f;
-float Engine::s = 0.02055f;
+float Engine::w = 0.00344f;
+float Engine::s = 0.00356f;
 float Engine::r = 1.0f;
-float Engine::px = 0.0f;
-float Engine::py = 0.0f;
+float Engine::px = -43.f;
+float Engine::py = -63.f;
 float Engine::timer = 0.0f;
 int Engine::window_id = 0;
 CudaOfLife * Engine::cof = new CudaOfLife();
@@ -46,27 +46,26 @@ void Engine::WindowResize(int w, int h){
 
 void Engine::renderScene(void){
 	// Clear Color and Depth Buffers
-    
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for(int i = -50; i < 50; ++i)
-      for(int j= -50; j < 50; ++j){
-            if(cof->GetCell(i+50, j+50)) glColor3f(0.f, 1.f, 0.4f);
-            else glColor3f(0.f, 0.f, 0.f);
-            glBegin(GL_POLYGON);
-            float x_pos = s*(i+px);
-            float y_pos = s*(j+py);
-            glVertex3f(x_pos,y_pos,0);
-            glVertex3f(x_pos,y_pos+w,0);
-            glVertex3f(x_pos+w,y_pos+w,0);
-            glVertex3f(x_pos+w,y_pos,0);
-            glEnd();
-        }
     if(timer > 1.0f){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        for(int i = -500; i < 500; ++i)
+        for(int j= -500; j < 500; ++j){
+                if(cof->GetCell(i+500, j+500)) glColor3f(0.f, 1.f, 0.4f);
+                else glColor3f(0.f, 0.f, 0.f);
+                glBegin(GL_POLYGON);
+                float x_pos = s*(i+px);
+                float y_pos = s*(j+py);
+                glVertex3f(x_pos,y_pos,0);
+                glVertex3f(x_pos,y_pos+w,0);
+                glVertex3f(x_pos+w,y_pos+w,0);
+                glVertex3f(x_pos+w,y_pos,0);
+                glEnd();
+            }
         cof->CPU();
         timer = 0.0f;
     }
 
-    timer += 0.004f;
+    timer += 0.05f;
 	glutSwapBuffers();
 }
 
@@ -76,7 +75,7 @@ void Engine::OnKeyboard(unsigned char key, int x, int y){
             s += 0.001f*r;
             w += 0.001f*r;
             r += 0.01f;
-            printf("s: %.5f w: %.5f\n", s, w);
+            printf("x: %f, y: %f, s: %f, w: %f\n", px, py, s, w);
             break;
         case 'e':
             s -= 0.001f*r;

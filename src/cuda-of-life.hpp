@@ -7,7 +7,7 @@ class CudaOfLife{
         void CPU();
         bool GetCell(int x, int y); 
     private:
-        bool universe[100][100];
+        bool universe[1000][1000];
 
 };
 #endif
